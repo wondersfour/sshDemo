@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
+	<!-- spring配置文件开始 -->
+	 <context-param>
+	   <param-name>contextConfigLocation</param-name><!-- spring配置文件，请根据需要选取 -->
+	   <param-value>classpath:applicationContext.xml</param-value>
+	 </context-param>
+	 <!-- 配置日志文件 -->
+	 <context-param>
+	 	<param-name>log4jConfigLocation</param-name>
+	 	<param-value>classpath:log4j.properties</param-value>
+	 </context-param>
+	 
+	 <!-- 监听日志启动类 -->
+	 <listener>
+	 	<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	 </listener>
+	 <listener><!-- Spring负责监听web容器启动和关闭的事件 --><!-- Spring ApplicationContext载入 -->
+	   <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	 </listener>
+	 <listener>
+	 	<listener-class>com.imooc.util.ApplicationCtx</listener-class>
+	 </listener>
+	 
+	 
+	 <listener><!-- Spring监听HTTP请求事件 -->
+	   <!-- 使spring支持request与session的scope,如: -->
+	   <!-- <bean id="loginAction" class="com.foo.LoginAction" scope="request"/> -->
+	   <!-- 使用： -->
+	   <!-- 1、注解获取：@Autowired HttpServletRequest request; -->
+	   <!-- 2、java代码：HttpServletRequest request = 
+	   ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest(); -->
+	   <!-- 3、直接在参数中传递：public String sayHi(HttpServletRequest request) -->
+	   <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	 </listener>
+	  <listener><!-- Spring 刷新Introspector防止内存泄露 -->
+	   <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	 </listener>
+	
+	<filter>
+		<filter-name>charsetEncoding</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>charsetEncoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	
+	
+	
+	<!-- 配置DispatchcerServlet  -->
+	<servlet>
+		<servlet-name>springDispatcherServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!--配置Spring mvc下的配置文件的位置和名称 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:springmvc.xml</param-value>
+			<!--配置容器在启动的时候就加载这个servlet并实例化-->       
+			<!-- <load-on-startup>1</load-on-startup> -->	
+		</init-param>
+	</servlet>
+	
+	<!-- 配置druid页面监控功能
+	http://localhost:8080/springDemo/druid/datasource.html
+	 -->
+	
+	<servlet>
+	     <servlet-name>DruidStatView</servlet-name>
+	     <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+	     <init-param>
+	        <!-- 用户名 -->
+	        <param-name>loginUsername</param-name>
+	        <param-value>admin</param-value>
+	    </init-param>
+	    <init-param>
+	        <!-- 密码 -->
+	        <param-name>loginPassword</param-name>
+	        <param-value>123456</param-value>
+	    </init-param>
+	 </servlet>
+	 <servlet-mapping>
+	     <servlet-name>DruidStatView</servlet-name>
+	     <url-pattern>/druid/*</url-pattern>
+	 </servlet-mapping>
+	
+	<servlet>
+		<!-- 配置 HessianServlet，Servlet的名字随便配置，例如这里配置成ServiceServlet-->
+        <servlet-name>ServiceServlet</servlet-name>
+        <servlet-class>com.caucho.hessian.server.HessianServlet</servlet-class>
+        
+        <!-- 配置接口的具体实现类 -->
+        <init-param>
+            <param-name>service-class</param-name>
+            <param-value>com.wonders.hessian.impl.ServiceImpl</param-value>
+        </init-param>
+	</servlet>
+	
+	<servlet-mapping>
+		 <servlet-name>ServiceServlet</servlet-name>
+        <url-pattern>/ServiceServlet</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet-mapping>
+		<servlet-name>springDispatcherServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

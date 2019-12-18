@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+   
+   <bean id="user" class="com.imooc.dao.User"></bean>
+   
+   <bean id ="demo1" class="com.imooc.domain.Demo1">
+   		<property name="demoName" value="this is demoName value."></property>
+   </bean>
+   
+   <bean id="userDao" class="com.imooc.dao.impl.UserDaoImpl">
+   </bean>
+   
+   <bean id="userService" class="com.imooc.service.impl.UserServiceImpl">
+   		<property name="userDao" ref="userDao"></property>
+   </bean>
+   
+   <!-- 对象注入复杂类型属性，如数组、List、Map、Properties。 -->
+   <bean id="propertyDemo" class="com.imooc.ioc.PropertyDemo">
+   		<property name="arr">
+   			<list>
+               <value>value 1 of array</value>
+               <value>value 2 of array</value>
+               <value>value 3 of array</value>
+           </list>
+   		</property>
+   </bean>
+   <!-- 百度  -->
+    <!--  <bean id="multipartResolver" class="com.baidu.ueditor.controller.CommonsMultiparResolver"></bean>-->
+   <!-- 导入多个Properties配置文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <!--要是有多个配置文件，只需在这里继续添加即可 -->
+                <value>classpath:datasource.properties</value>        
+            </list>
+        </property>
+    </bean>
+    <!-- 加载数据源组件 -->        
+    <import resource="classpath:datasource.xml" />
+   
+   
+   <!-- 开启注解扫描 -->
+   
+   <context:component-scan base-package="com"></context:component-scan>
+</beans>
